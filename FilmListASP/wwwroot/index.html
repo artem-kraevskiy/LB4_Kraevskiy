@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<head>
+    <title>Список фильмов</title>
+    <style>
+        .main-table
+        {
+            border-style: solid;
+            border-width: 1px;
+        }
+        td
+        {
+            border-style: solid;
+            border-width: 1px;
+        }
+        form
+        {
+            padding: 5px;
+            border-style: solid;
+            border-width: 1px;
+        }
+        form td
+        {
+            border-style: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Список фильмов</h1>
+    <table>
+        <thead>
+            <tr>
+                <td>#</td>
+                <td>Название</td>
+                <td>Рейтинг</td>
+                <td>Жанр</td>
+                <td>Описание</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+        </tbody>
+    </table>
+
+    <script>
+        fetch('/films')
+        .then(res => res.json())
+        .then(result =>{
+            for(let i = 0; i < result.length; i++)
+            {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `<td>${result[i].id}</td>
+                                    <td>${result[i].nazv}</td>
+                                    <td>${result[i].reit}</td>
+                                    <td>${result[i].zanr}</td>
+                                    <td>${result[i].opis}</td>
+                                    <td><input type="button" value="Изменить" 
+                                        data-id="${result[i].id}" onclick="EditHandler(this)"/></td>
+                                    <td><input type="checkbox" data-id="${result[i].id}"/></td>`;
+                document.querySelector('#table-body').append(newRow);
+            }
+        });
+    </script>
+
+    <input id="add-film-button" type="button" value="Добавить запись"/>
+    <input id="delete-film-button" type="button" value="Удалить выделенные записи"/>
+    <form id="add-film-form" name="add-film" data-id="-1" style="display: none">
+        <h2>Форма добавления/изменения данных<input id="close-form-button" type="button" value="[X]" 
+            style="font-size: 16pt;"/></h2>
+        <table>
+            <tr>
+                <td><p>Название</p></td>
+                <td><input id="film-fio" type="text"/></td>
+            </tr>
+            <tr>
+                <td><p>Рейтинг</p></td>
+                <td><input id="film-reit" type="number" min = "1" max = "5" value="1"/></td>
+            </tr>
+            <tr>
+                <td><p>Жанр</p></td>
+                <td><input id="film-zanr" type="text"/></td>
+            </tr>
+            <tr>
+                <td><p>Описание</p></td>
+                <td><input id="film-opis" type="text"/></td>
+            </tr>
+        </table>
+        <input id="confirm-button" type="submit" value="Добавить"/>
+    </form>
+
+    <script src="/src/handlers.js"></script>
+</body>
